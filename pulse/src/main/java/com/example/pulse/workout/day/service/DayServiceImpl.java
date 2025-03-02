@@ -28,6 +28,7 @@ public class DayServiceImpl implements DayService{
                     if(exercise.getId()>0){
                         Optional<Exercise> existingExercise = exerciseRepository.findById(exercise.getId());
                         if (existingExercise.isPresent()){
+                            existingExercise.get().setDay(day);
                             exercises.add(existingExercise.get());
                         }
                     }else{
@@ -42,10 +43,27 @@ public class DayServiceImpl implements DayService{
     }
 
     @Override
-    @Transactional
     public Day update(int id, Day day) {
       day.setId(id);
-      return dayRepository.save(day);
+        if(day.getExercises()!=null && !day.getExercises().isEmpty()){
+            List<Exercise> exercises = new ArrayList<>();
+
+            for(Exercise exercise:day.getExercises()){
+                if(exercise.getId()>0){
+                    Optional<Exercise> existingExercise = exerciseRepository.findById(exercise.getId());
+                    if (existingExercise.isPresent()){
+                        existingExercise.get().setDay(day);
+                        exercises.add(existingExercise.get());
+                    }
+                }else{
+                    exercise.setDay(day);
+                    exercises.add(exercise);
+                }
+            }
+
+            day.setExercises(exercises);
+        }
+        return dayRepository.save(day);
     }
 
     @Override
