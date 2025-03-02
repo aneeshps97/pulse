@@ -2,6 +2,7 @@ package com.example.pulse.workout.exercise.service;
 
 import com.example.pulse.workout.exercise.entity.Exercise;
 import com.example.pulse.workout.exercise.repository.ExerciseRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,20 +21,21 @@ public class ExerciseServiceImpl implements ExerciseService{
     }
 
     @Override
-    public Exercise update(int exerciseId,Exercise exercise) {
-        exercise.setId(exerciseId);
+    @Transactional
+    public Exercise update(int id,Exercise exercise) {
+        exercise.setId(id);
         return exerciseRepository.save(exercise);
     }
 
     @Override
-    public Optional<Exercise> findById(int exerciseId) {
-        return exerciseRepository.findById(exerciseId);
+    public Optional<Exercise> findById(int id) {
+        return exerciseRepository.findById(id);
     }
 
     @Override
-    public boolean delete(int exerciseId) {
-        Optional<Exercise> exercise =exerciseRepository.findById(exerciseId);
+    public boolean delete(int id) {
+        Optional<Exercise> exercise =exerciseRepository.findById(id);
         exercise.ifPresent(value -> exerciseRepository.delete(value));
-        return !exerciseRepository.existsById(exerciseId);
+        return !exerciseRepository.existsById(id);
     }
 }
