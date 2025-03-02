@@ -1,4 +1,4 @@
-package com.example.pulse.workout.entity;
+package com.example.pulse.workout.exercise.entity;
 
 import jakarta.persistence.*;
 
@@ -14,13 +14,20 @@ public class Exercise {
     public Exercise(String name) {
         this.name = name;
     }
-
     public Exercise(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
     public Exercise() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
