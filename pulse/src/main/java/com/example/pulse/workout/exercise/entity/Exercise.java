@@ -2,32 +2,32 @@ package com.example.pulse.workout.exercise.entity;
 
 import com.example.pulse.workout.day.entity.Day;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "exercise")
 public class Exercise {
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "exercises")
+    @JsonBackReference
+    List<Day> days = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "day_id")
-    @JsonBackReference
-    private Day day;
-
-    public Exercise(String name, Day day) {
-        this.name = name;
-        this.day = day;
-    }
-
-    public Exercise(int id, String name, Day day) {
+    public Exercise(int id, String name, List<Day> days) {
         this.id = id;
         this.name = name;
-        this.day = day;
+        this.days = days;
+    }
+
+    public Exercise(String name, List<Day> days) {
+        this.name = name;
+        this.days = days;
     }
 
     public Exercise(String name) {
@@ -42,12 +42,12 @@ public class Exercise {
     public Exercise() {
     }
 
-    public Day getDay() {
-        return day;
+    public List<Day> getDays() {
+        return days;
     }
 
-    public void setDay(Day day) {
-        this.day = day;
+    public void setDays(List<Day> days) {
+        this.days = days;
     }
 
     public int getId() {

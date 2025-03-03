@@ -17,12 +17,16 @@ public class Day {
     private int id;
     @Column(name = "name")
     private String name;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "plan_id")
     @JsonBackReference
     private Plan plan;
-    @OneToMany(mappedBy = "day", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonManagedReference
+
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "day_exercise",joinColumns = @JoinColumn(name = "day_id"),
+            inverseJoinColumns = @JoinColumn(name = "exercise_id"))
     private List<Exercise> exercises;
 
     public Day(String name, Plan plan, List<Exercise> exercises) {

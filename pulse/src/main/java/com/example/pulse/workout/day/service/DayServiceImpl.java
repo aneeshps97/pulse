@@ -21,21 +21,22 @@ public class DayServiceImpl implements DayService{
     @Override
     @Transactional
     public Day add(Day day) {
+        List<Day> days = new ArrayList<>();
+        days.add(day);
         if(day.getExercises()!=null && !day.getExercises().isEmpty()){
             List<Exercise> exercises = new ArrayList<>();
-
-                for(Exercise exercise:day.getExercises()){
-                    if(exercise.getId()>0){
-                        Optional<Exercise> existingExercise = exerciseRepository.findById(exercise.getId());
-                        if (existingExercise.isPresent()){
-                            existingExercise.get().setDay(day);
-                            exercises.add(existingExercise.get());
-                        }
-                    }else{
-                        exercise.setDay(day);
-                        exercises.add(exercise);
+            for(Exercise exercise:day.getExercises()){
+                if(exercise.getId()>0){
+                    Optional<Exercise> existingExercise = exerciseRepository.findById(exercise.getId());
+                    if (existingExercise.isPresent()){
+                        existingExercise.get().setDays(days);
+                        exercises.add(existingExercise.get());
                     }
+                }else{
+                    exercise.setDays(days);
+                    exercises.add(exercise);
                 }
+            }
 
             day.setExercises(exercises);
         }
@@ -45,18 +46,19 @@ public class DayServiceImpl implements DayService{
     @Override
     public Day update(int id, Day day) {
       day.setId(id);
+      List<Day> days = new ArrayList<>();
+      days.add(day);
         if(day.getExercises()!=null && !day.getExercises().isEmpty()){
             List<Exercise> exercises = new ArrayList<>();
-
             for(Exercise exercise:day.getExercises()){
                 if(exercise.getId()>0){
                     Optional<Exercise> existingExercise = exerciseRepository.findById(exercise.getId());
                     if (existingExercise.isPresent()){
-                        existingExercise.get().setDay(day);
+                        existingExercise.get().setDays(days);
                         exercises.add(existingExercise.get());
                     }
                 }else{
-                    exercise.setDay(day);
+                    exercise.setDays(days);
                     exercises.add(exercise);
                 }
             }
