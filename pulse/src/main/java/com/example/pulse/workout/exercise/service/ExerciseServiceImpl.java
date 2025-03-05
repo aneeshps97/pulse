@@ -1,7 +1,9 @@
 package com.example.pulse.workout.exercise.service;
 
+import com.example.pulse.workout.day.entity.Day;
 import com.example.pulse.workout.exercise.entity.Exercise;
 import com.example.pulse.workout.exercise.repository.ExerciseRepository;
+import com.example.pulse.workout.log.entity.Log;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,19 @@ public class ExerciseServiceImpl implements ExerciseService{
     @Override
     public boolean delete(int id) {
         Optional<Exercise> exercise =exerciseRepository.findById(id);
-        exercise.ifPresent(value -> exerciseRepository.delete(value));
+        if (exercise.isPresent()){
+            for (Day day: exercise.get().getDays()){
+                day.getExercises().remove(exercise.get());
+            }
+            exercise.get().getDays().clear();
+
+            for (Log log : exercise.get().getLogs()){
+                log.getExercises().remove(exercise.get());
+            }
+            exercise.get().getLogs().clear();
+            exerciseRepository.delete(exercise.get());
+        }
+
         return !exerciseRepository.existsById(id);
     }
 }

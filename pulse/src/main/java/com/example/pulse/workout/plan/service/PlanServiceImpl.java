@@ -89,8 +89,14 @@ public class PlanServiceImpl implements PlanService{
 
     @Override
     public boolean deletePlan(int id) {
-        Optional<Plan> plan =planRespository.findById(id);
-        plan.ifPresent(value -> planRespository.delete(value));
+        Optional<Plan> plan = planRespository.findById(id);
+       if(plan.isPresent()){
+           for(Day day: plan.get().getDays()){
+               day.setPlan(null);
+           }
+           plan.get().getDays().clear();
+           planRespository.delete(plan.get());
+       }
         return !planRespository.existsById(id);
     }
 }
