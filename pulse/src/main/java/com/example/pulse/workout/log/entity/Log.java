@@ -15,7 +15,7 @@ public class Log {
     private int id;
 
     @Column(name = "date")
-    private Date date;
+    private String date;
     @Column(name = "weight")
     private String weight;
     @Column(name = "reps")
@@ -25,19 +25,22 @@ public class Log {
             inverseJoinColumns = @JoinColumn(name = "exercise_id"))
     private List<Exercise> exercises;
 
-    public Log(Date date, String weight, int reps, List<Exercise> exercises) {
+    public Log(String date, String weight, int reps, List<Exercise> exercises) {
         this.date = date;
         this.weight = weight;
         this.reps = reps;
         this.exercises = exercises;
     }
 
-    public Log(int id, Date date, String weight, int reps, List<Exercise> exercises) {
+    public Log(int id, String date, String weight, int reps, List<Exercise> exercises) {
         this.id = id;
         this.date = date;
         this.weight = weight;
         this.reps = reps;
         this.exercises = exercises;
+    }
+
+    public Log() {
     }
 
     public int getId() {
@@ -48,11 +51,11 @@ public class Log {
         this.id = id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

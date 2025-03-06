@@ -29,7 +29,7 @@ public class DayServiceImpl implements DayService{
                 if(exercise.getId()>0){
                     Optional<Exercise> existingExercise = exerciseRepository.findById(exercise.getId());
                     if (existingExercise.isPresent()){
-                        existingExercise.get().setDays(days);
+                        existingExercise.get().getDays().add(day);
                         exercises.add(existingExercise.get());
                     }
                 }else{
@@ -46,37 +46,23 @@ public class DayServiceImpl implements DayService{
     @Override
     public Day update(int id, Day day) {
         Optional<Day> existingDay = dayRepository.findById(id);
+        List<Exercise> existingExercises = new ArrayList<>();
+        List<Day> existingDays = new ArrayList<>();
         if (existingDay.isPresent()){
-           existingDay.get().setName(day.getName());
-           //find excercises
-           List<Exercise> exercises = day.getExercises();
-           //update the exercises and save that to the day entity which is existing day
-           List<Exercise> updatedExercises = new ArrayList<>();
-           for (Exercise exercise: day.getExercises()){
-               if(exercise.getId()>0){
-                   //this means that exercises already exists in the db
-                   //check the day for that corresponding exercise and if it is not there update it
-                   Optional<Exercise> existingExercise = exerciseRepository.findById(exercise.getId());
-                   if(existingExercise.isPresent()){
-                       //the data exists in the db
-                       if(!existingExercise.get().getDays().contains(existingDay.get())){
-                           existingExercise.get().getDays().add(existingDay.get());
-                       }
-                       //now we are creating a list to save to day.getExercises
-                       updatedExercises.add(exercise);
-                   }
-               }else {
-                       //consider it as a new exercise
-                       exercise.getDays().add(existingDay.get());
-                       existingDay.get().getExercises().add(exerciseRepository.save(exercise));
-                       updatedExercises.add(exercise);
-               }
-           }
-           //remove every exercises other than this updated exercises from the existing day
-            existingDay.get().getExercises().removeIf(exercise -> !updatedExercises.contains(exercise));
-            existingDay.get().setExercises(updatedExercises);
+            existingDay.get().setName(day.getName());
+            for (Exercise exercise: existingDay.get().getExercises()){
+                if (!exercise.getDays().contains(existingDay.get())){
+                    exercise.getDays().add(existingDay.get());
+                    existingExercises.add(exercise);
+                }else {
+                    existingExercises.add(exercise);
+                }
+            }
 
+           existingDay.get().getExercises().clear();
+            existingDay.get().getExercises().addAll(existingExercises);
         }
+
         return dayRepository.save(existingDay.get());
     }
 
