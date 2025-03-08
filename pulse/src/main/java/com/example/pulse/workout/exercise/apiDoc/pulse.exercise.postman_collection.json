@@ -1,0 +1,63 @@
+{
+	"info": {
+		"_postman_id": "0b9f1697-7926-4902-ba48-9aca3443306b",
+		"name": "pulse.exercise",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "postExercise",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"exercise4\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8088/pulse/exercise"
+			},
+			"response": []
+		},
+		{
+			"name": "getExercise",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": ""
+			},
+			"response": []
+		},
+		{
+			"name": "updateExercise",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n    \"name\":\"exercise56\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8088/pulse/exercise/15"
+			},
+			"response": []
+		},
+		{
+			"name": "deleteExercise",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": ""
+			},
+			"response": []
+		}
+	]
+}

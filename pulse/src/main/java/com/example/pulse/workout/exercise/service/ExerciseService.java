@@ -7,8 +7,8 @@ import java.util.Optional;
 
 @Service
 public interface ExerciseService {
-    public Exercise add(Exercise exercise);
+    public Exercise add(Exercise exercise) throws Exception;
     public Exercise update(int id,Exercise exercise);
-    public Optional<Exercise> findById(int id);
+    public Exercise findById(int id);
     public boolean delete(int id);
 }
