@@ -1,5 +1,7 @@
 package com.example.pulse.workout.log.service;
 
+import com.example.pulse.constants.StatusCodes;
+import com.example.pulse.exception.PulseException;
 import com.example.pulse.workout.exercise.entity.Exercise;
 import com.example.pulse.workout.exercise.repository.ExerciseRepository;
 import com.example.pulse.workout.log.entity.Log;
@@ -26,8 +28,8 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public Optional<Log> findById(int id) {
-        return logRepository.findById(id);
+    public Log findById(int id) throws PulseException{
+        return logRepository.findById(id).orElseThrow(()->new PulseException(StatusCodes.LOG_FETCHING_FAILED));
     }
 
     @Override
@@ -37,7 +39,7 @@ public class LogServiceImpl implements LogService {
         if(!exercises.isEmpty()){
             for (Exercise exercise : exercises){
                 if (exercise.getId()>0){
-                    exercise = exerciseRepository.findById(exercise.getId()).get();
+                    exercise = exerciseRepository.findById(exercise.getId()).orElseThrow(()-> new PulseException(StatusCodes.EXERCISE_FETCHING_FAILED));
                     exercise.getLogs().add(log);
                     existingExercises.add(exercise);
                 }else {
@@ -49,47 +51,51 @@ public class LogServiceImpl implements LogService {
             log.getExercises().clear();
             log.setExercises(existingExercises);
         }
-        return logRepository.save(log);
+        log = logRepository.save(log);
+        if(!logRepository.existsById(log.getId())){
+            throw new PulseException(StatusCodes.LOG_ADDING_FAILED);
+        }
+        return log;
     }
 
     @Override
     public Log update(int id, Log log) {
-        Optional<Log> existingLog = logRepository.findById(id);
-        existingLog.get().setDate(log.getDate());
-        existingLog.get().setReps(log.getReps());
-        existingLog.get().setWeight(log.getWeight());
+        Log existingLog = logRepository.findById(id).orElseThrow(()->new PulseException(StatusCodes.LOG_FETCHING_FAILED));
+        existingLog.setDate(log.getDate());
+        existingLog.setReps(log.getReps());
+        existingLog.setWeight(log.getWeight());
         List<Exercise> updatedExercises = new ArrayList<>();
-        if (existingLog.isPresent()) {
             for (Exercise exercise : log.getExercises()) {
                 if (exercise.getId() > 0) {
-                    Optional<Exercise> exisingExercise = exerciseRepository.findById(exercise.getId());
-                    if (exisingExercise.isPresent()) {
-                        if (!exisingExercise.get().getLogs().contains(existingLog.get())) {
-                            exisingExercise.get().getLogs().add(existingLog.get());
-                            updatedExercises.add(exisingExercise.get());
+                    Exercise exisingExercise = exerciseRepository.findById(exercise.getId()).orElseThrow(()->new PulseException(StatusCodes.EXERCISE_FETCHING_FAILED));
+                        if (!exisingExercise.getLogs().contains(existingLog)) {
+                            exisingExercise.getLogs().add(existingLog);
+                            updatedExercises.add(exisingExercise);
                         }else{
-                            updatedExercises.add(exisingExercise.get());
+                            updatedExercises.add(exisingExercise);
                         }
-                    }
-
                 } else {
                     exercise.getLogs().add(log);
                     updatedExercises.add(exercise);
                 }
             }
-            existingLog.get().getExercises().clear();
-            existingLog.get().getExercises().addAll(updatedExercises);
-        }
-        return logRepository.save(existingLog.get());
+            existingLog.getExercises().clear();
+            existingLog.getExercises().addAll(updatedExercises);
+            log = logRepository.save(existingLog);
+            if(!logRepository.existsById(log.getId())){
+                throw new PulseException(StatusCodes.LOG_UPDATION_FAILED);
+            }
+        return logRepository.save(existingLog);
     }
 
     @Override
     public boolean delete(int id) {
-        Optional<Log> log = logRepository.findById(id);
-        if (log.isPresent()) {
-            log.get().getExercises().forEach(exercise -> exercise.getLogs().remove(log.get()));
-            logRepository.delete(log.get());
+        Log log = logRepository.findById(id).orElseThrow(() -> new PulseException(StatusCodes.LOG_FETCHING_FAILED));
+        log.getExercises().forEach(exercise -> exercise.getLogs().remove(log));
+        logRepository.delete(log);
+        if(logRepository.existsById(id)){
+            throw new PulseException(StatusCodes.LOG_DELETION_FAILED);
         }
-        return !logRepository.existsById(id);
+        return true;
     }
 }

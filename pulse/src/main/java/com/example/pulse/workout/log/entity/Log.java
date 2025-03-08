@@ -1,12 +1,18 @@
 package com.example.pulse.workout.log.entity;
 
 import com.example.pulse.workout.exercise.entity.Exercise;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "log")
 public class Log {
@@ -24,62 +30,4 @@ public class Log {
     @JoinTable(name = "log_exercise", joinColumns = @JoinColumn(name = "log_id"),
             inverseJoinColumns = @JoinColumn(name = "exercise_id"))
     private List<Exercise> exercises;
-
-    public Log(String date, String weight, int reps, List<Exercise> exercises) {
-        this.date = date;
-        this.weight = weight;
-        this.reps = reps;
-        this.exercises = exercises;
-    }
-
-    public Log(int id, String date, String weight, int reps, List<Exercise> exercises) {
-        this.id = id;
-        this.date = date;
-        this.weight = weight;
-        this.reps = reps;
-        this.exercises = exercises;
-    }
-
-    public Log() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getWeight() {
-        return weight;
-    }
-
-    public void setWeight(String weight) {
-        this.weight = weight;
-    }
-
-    public int getReps() {
-        return reps;
-    }
-
-    public void setReps(int reps) {
-        this.reps = reps;
-    }
-
-    public List<Exercise> getExercises() {
-        return exercises;
-    }
-
-    public void setExercises(List<Exercise> exercises) {
-        this.exercises = exercises;
-    }
 }

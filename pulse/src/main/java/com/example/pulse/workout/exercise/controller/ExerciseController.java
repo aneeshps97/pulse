@@ -4,7 +4,7 @@ import com.example.pulse.Response.Response;
 import com.example.pulse.constants.StatusCodes;
 import com.example.pulse.workout.exercise.entity.Exercise;
 import com.example.pulse.workout.exercise.service.ExerciseService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +14,10 @@ Requests are provided as postman collection along with this controller*/
 
 @RestController
 @RequestMapping("/exercise")
+@AllArgsConstructor
 public class ExerciseController {
     ExerciseService exerciseService;
     GenerateResponse generateResponse;
-    @Autowired
-    ExerciseController(ExerciseService exerciseService,GenerateResponse generateResponse){
-        this.exerciseService = exerciseService;
-        this.generateResponse = generateResponse;
-    }
 
     @PostMapping
     public ResponseEntity<Response<Exercise>> add(@RequestBody  Exercise exercise) throws Exception {

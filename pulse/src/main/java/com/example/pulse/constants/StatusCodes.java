@@ -12,4 +12,13 @@ public final class StatusCodes {
     public static final int EXERCISE_DELETION_FAILED = 105;
     public static final int EXERCISE_UPDATED_SUCCESSFULLY = 106;
     public static final int EXERCISE_DELETED_SUCCESSFULLY = 107;
+    public static final int LOG_ADDED_SUCCESSFULLY = 108;
+    public static final int LOG_FETCHING_FAILED = 109;
+    public static final int LOG_UPDATION_FAILED = 110;
+    public static final int LOG_UPDATED_SUCCESSFULLY = 111;
+    public static final int LOG_ADDING_FAILED = 112;
+    public static final int LOG_DELETION_FAILED = 113;
+    public static final int LOG_FETCHING_SUCCESS = 114;
+    public static final int LOG_DELETION_SUCCESS = 115;
+
 }

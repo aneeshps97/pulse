@@ -34,6 +34,7 @@ public class ExerciseServiceImpl implements ExerciseService{
     public Exercise update(int id,Exercise exercise) throws PulseException{
         Exercise updatedExercise = exerciseRepository.findById(id).orElseThrow(() -> new PulseException(StatusCodes.EXERCISE_FETCHING_FAILED));
         updatedExercise.setName(exercise.getName());
+        updatedExercise.setComment(exercise.getComment());
         updatedExercise = exerciseRepository.save(updatedExercise);
         if (!exerciseRepository.existsById(updatedExercise.getId())){
             throw new PulseException(StatusCodes.EXERCISE_UPDATE_FAILED);
