@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /*controller layer to add, modify, fetch and remove exercise details
 Requests are provided as postman collection along with this controller*/
 
@@ -29,6 +31,12 @@ public class ExerciseController {
     public ResponseEntity<Response<Exercise>> findExerciseById(@PathVariable int exerciseId){
         Exercise exercise = exerciseService.findById(exerciseId);
         return generateResponse.formatResponse(StatusCodes.EXERCISE_FETCHED_SUCCESSFULLY, StatusCodes.SUCCESS,exercise,HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping
+    public ResponseEntity<Response<List<Exercise>>> findAll(){
+        List<Exercise> exercises= exerciseService.findAll();
+        return generateResponse.formatResponse(StatusCodes.EXERCISE_FETCHED_SUCCESSFULLY, StatusCodes.SUCCESS,exercises,HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/{exerciseId}")

@@ -1,5 +1,6 @@
 package com.example.pulse.workout.exercise.entity;
 
+import com.example.pulse.workout.categories.entity.Category;
 import com.example.pulse.workout.day.entity.Day;
 import com.example.pulse.workout.log.entity.Log;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,9 +20,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Exercise {
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "exercises")
-    @JsonIgnore
-    List<Log> logs = new ArrayList<>();
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "category_id")
+    Category category;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "exercises")
     @JsonIgnore
     List<Day> days = new ArrayList<>();

@@ -25,4 +25,16 @@ public class ControllerAdvice {
         response.setMessage(statusCodeService.getMessageForCode(e.getErrorCode()));
         return new ResponseEntity<Response<T>>(response, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(Exception.class)
+    public <T> ResponseEntity<Response<T>> handleGeneralException(Exception e) {
+       // logger.error("Unhandled exception: {}", e.getMessage(), e);
+        Response<T> response = new Response<>();
+        response.setStatusCode(StatusCodes.GENERAL_EXCEPTION);
+        response.setStatus(StatusCodes.FAIL);
+        response.setMessage(statusCodeService.getMessageForCode(StatusCodes.GENERAL_EXCEPTION));
+        System.out.println(""+e.getMessage());
+        e.printStackTrace();
+        return new ResponseEntity<Response<T>>(response, HttpStatus.BAD_REQUEST);
+    }
 }

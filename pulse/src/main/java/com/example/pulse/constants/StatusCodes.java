@@ -4,6 +4,7 @@ public final class StatusCodes {
     private StatusCodes(){};
     public static final int SUCCESS = 0;
     public static final int FAIL = 1;
+    public static final int GENERAL_EXCEPTION = 99;
     public static final int EXERCISE_ADDED_SUCCESSFULLY = 100;
     public static final int EXERCISE_ADDING_FAILED = 101;
     public static final int EXERCISE_FETCHED_SUCCESSFULLY = 102;
@@ -14,11 +15,27 @@ public final class StatusCodes {
     public static final int EXERCISE_DELETED_SUCCESSFULLY = 107;
     public static final int LOG_ADDED_SUCCESSFULLY = 108;
     public static final int LOG_FETCHING_FAILED = 109;
-    public static final int LOG_UPDATION_FAILED = 110;
+    public static final int LOG_UPDATE_FAILED = 110;
     public static final int LOG_UPDATED_SUCCESSFULLY = 111;
     public static final int LOG_ADDING_FAILED = 112;
     public static final int LOG_DELETION_FAILED = 113;
     public static final int LOG_FETCHING_SUCCESS = 114;
     public static final int LOG_DELETION_SUCCESS = 115;
-
+    public static final int DAY_ADDED_SUCCESSFULLY = 116;
+    public static final int DAY_UPDATED_SUCCESSFULLY = 117;
+    public static final int DAY_FETCHING_SUCCESS = 118;
+    public static final int DAY_DELETION_SUCCESS = 119;
+    public static final int DAY_ADDING_FAILED = 120;
+    public static final int DAY_FETCHING_FAILED = 121;
+    public static final int DAY_DELETION_FAILED = 122;
+    public static final int DAY_UPDATE_FAILED = 123;
+    public static final int PLAN_ADDED_SUCCESSFULLY = 124;
+    public static final int PLAN_UPDATED_SUCCESSFULLY = 125;
+    public static final int PLAN_FETCHED_SUCCESSFULLY = 126;
+    public static final int PLAN_DELETED_SUCCESSFULLY = 127;
+    public static final int PLAN_ADDING_FAILED = 128;
+    public static final int PLAN_UPDATING_FAILED = 129;
+    public static final int PLAN_FETCHING_FAILED = 130;
+    public static final int PLAN_DELETION_FAILED = 131;
+    public static final int DAY_ALREADY_ASSIGNED_TO_ANOTHER_PLAN = 132;
 }

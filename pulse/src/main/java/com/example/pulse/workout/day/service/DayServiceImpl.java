@@ -1,86 +1,117 @@
 package com.example.pulse.workout.day.service;
 
+import com.example.pulse.constants.StatusCodes;
+import com.example.pulse.exception.PulseException;
 import com.example.pulse.workout.day.entity.Day;
 import com.example.pulse.workout.day.repository.DayRepository;
 import com.example.pulse.workout.exercise.entity.Exercise;
 import com.example.pulse.workout.exercise.repository.ExerciseRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Service
+@AllArgsConstructor
 public class DayServiceImpl implements DayService{
     DayRepository dayRepository;
     ExerciseRepository exerciseRepository;
-    DayServiceImpl(DayRepository dayRepository,ExerciseRepository exerciseRepository){
-        this.dayRepository = dayRepository;
-        this.exerciseRepository = exerciseRepository;
-    }
     @Override
     @Transactional
-    public Day add(Day day) {
+    public Day add(Day day) throws PulseException {
         List<Day> days = new ArrayList<>();
         days.add(day);
         if(day.getExercises()!=null && !day.getExercises().isEmpty()){
             List<Exercise> exercises = new ArrayList<>();
             for(Exercise exercise:day.getExercises()){
                 if(exercise.getId()>0){
-                    Optional<Exercise> existingExercise = exerciseRepository.findById(exercise.getId());
-                    if (existingExercise.isPresent()){
-                        existingExercise.get().getDays().add(day);
-                        exercises.add(existingExercise.get());
-                    }
+                   Exercise existingExercise = exerciseRepository.findById(exercise.getId()).orElseThrow(()-> new PulseException(StatusCodes.EXERCISE_FETCHING_FAILED));
+                        existingExercise.getDays().add(day);
+                        exercises.add(existingExercise);
                 }else{
                     exercise.setDays(days);
                     exercises.add(exercise);
                 }
             }
-
             day.setExercises(exercises);
+        }
+        day = dayRepository.save(day);
+        if(!dayRepository.existsById(day.getId())){
+            throw  new PulseException(StatusCodes.DAY_ADDING_FAILED);
         }
         return dayRepository.save(day);
     }
 
     @Override
-    public Day update(int id, Day day) {
-        Optional<Day> existingDay = dayRepository.findById(id);
-        List<Exercise> existingExercises = new ArrayList<>();
-        List<Day> existingDays = new ArrayList<>();
-        if (existingDay.isPresent()){
-            existingDay.get().setName(day.getName());
-            for (Exercise exercise: existingDay.get().getExercises()){
-                if (!exercise.getDays().contains(existingDay.get())){
-                    exercise.getDays().add(existingDay.get());
-                    existingExercises.add(exercise);
-                }else {
-                    existingExercises.add(exercise);
+    public Day update(int id, Day day) throws PulseException{
+        try {
+            Day existingDay = dayRepository.findById(id).orElseThrow(() -> new PulseException(StatusCodes.DAY_FETCHING_FAILED));
+            List<Exercise> updatedExercises = new ArrayList<>();
+            List<Day> existingDays = new ArrayList<>();
+            existingDay.setName(day.getName());
+            for (Exercise exercise : day.getExercises()) {
+                if (exercise.getId() > 0) {
+                    Exercise existingExercise = exerciseRepository.findById(exercise.getId()).orElseThrow(()->new PulseException(StatusCodes.EXERCISE_FETCHING_FAILED));
+                    if (!existingExercise.getDays().contains(existingDay)) {
+                        existingExercise.getDays().add(existingDay);
+                        updatedExercises.add(existingExercise);
+                    } else {
+                        updatedExercises.add(exercise);
+                    }
+                } else {
+                    exercise.getDays().add(day);
+                    updatedExercises.add(exercise);
                 }
             }
 
-           existingDay.get().getExercises().clear();
-            existingDay.get().getExercises().addAll(existingExercises);
+            existingDay.getExercises().clear();
+            existingDay.getExercises().addAll(updatedExercises);
+            day = dayRepository.save(existingDay);
+        }catch (DataAccessException e){
+            throw new PulseException(StatusCodes.DAY_UPDATE_FAILED);
         }
-
-        return dayRepository.save(existingDay.get());
+        return day;
     }
 
     @Override
-    public Optional<Day> findById(int id) {
-        return dayRepository.findById(id);
+    public Day findById(int id) throws PulseException{
+        Day day = null;
+        try {
+            day =dayRepository.findById(id).orElseThrow(()->new PulseException(StatusCodes.DAY_FETCHING_FAILED));
+        }catch (DataAccessException e){
+            throw new PulseException(StatusCodes.DAY_FETCHING_FAILED);
+        }
+        return day;
+    }
+
+    @Override
+    public List<Day> findAll() {
+        List<Day> days = new ArrayList<>();
+        try {
+            days = dayRepository.findAll();
+        }catch (DataAccessException e){
+            throw new PulseException(StatusCodes.DAY_FETCHING_FAILED);
+        }
+        return days;
     }
 
     @Override
     public boolean delete(int id) {
-        Optional<Day> day = dayRepository.findById(id);
-        if(day.isPresent()){
-            day.get().setPlan(null);
-
-            day.get().getExercises().forEach(exercise -> exercise.getDays().removeIf(day1 -> day1.getId()==id));
-            dayRepository.delete(day.get());
+        boolean isDayDeletionSuccess = false;
+        try {
+            Optional<Day> day = dayRepository.findById(id);
+            if(day.isPresent()){
+                day.get().setPlan(null);
+                day.get().getExercises().forEach(exercise -> exercise.getDays().removeIf(day1 -> day1.getId()==id));
+                dayRepository.delete(day.get());
+                isDayDeletionSuccess = true;
+            }
+        }catch (DataAccessException e){
+            throw new PulseException(StatusCodes.DAY_DELETION_FAILED);
         }
-
-        return !dayRepository.existsById(id);
+        return isDayDeletionSuccess;
     }
 }

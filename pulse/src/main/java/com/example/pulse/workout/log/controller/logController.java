@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -36,6 +37,13 @@ public class logController {
         Log log = logService.findById(id);
         return generateResponse.formatResponse(StatusCodes.LOG_FETCHING_SUCCESS,StatusCodes.SUCCESS,log,HttpStatus.ACCEPTED);
     }
+
+    @GetMapping
+    public ResponseEntity<Response<List<Log>>> findAll(){
+        List<Log> logs = logService.findAll();
+        return generateResponse.formatResponse(StatusCodes.LOG_FETCHING_SUCCESS,StatusCodes.SUCCESS,logs,HttpStatus.ACCEPTED);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Response<Boolean>> deleteLog(@PathVariable int id){

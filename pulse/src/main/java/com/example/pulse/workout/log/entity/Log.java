@@ -26,8 +26,7 @@ public class Log {
     private String weight;
     @Column(name = "reps")
     private int reps;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "log_exercise", joinColumns = @JoinColumn(name = "log_id"),
-            inverseJoinColumns = @JoinColumn(name = "exercise_id"))
-    private List<Exercise> exercises;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "exercise_id")
+    private Exercise exercise;
 }
