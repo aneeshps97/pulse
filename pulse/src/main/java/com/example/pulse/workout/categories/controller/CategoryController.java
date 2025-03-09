@@ -25,29 +25,34 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Response<Category>> findCategory(@PathVariable int id){
+      logger.info("Request recieved for finding category for id::{}",id);
       Category category = categoryService.findById(id);
       return generateResponse.formatResponse(StatusCodes.CATEGORY_FETCHED_SUCCESSFULLY,StatusCodes.SUCCESS,category, HttpStatus.ACCEPTED);
     }
 
     @GetMapping
     public ResponseEntity<Response<List<Category>>>findAllCategories(){
+        logger.info("Request recieved for finding categories");
         List<Category> categories = categoryService.findAllCategories();
         return generateResponse.formatResponse(StatusCodes.CATEGORY_FETCHED_SUCCESSFULLY,StatusCodes.SUCCESS,categories, HttpStatus.ACCEPTED);
     }
 
     @PostMapping
     public ResponseEntity<Response<Category>>addCategory(@RequestBody Category category){
+        logger.info("Request recieved for adding category ::{}",category.toString());
         category = categoryService.add(category);
         return generateResponse.formatResponse(StatusCodes.CATEGORY_ADDED_SUCCESSFULLY,StatusCodes.SUCCESS,category, HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Response<Category>>updateCategory(@PathVariable int id,@RequestBody Category category){
+        logger.info("Request recieved for updating category for id::{}  data::{}",id,category.toString());
         return generateResponse.formatResponse(StatusCodes.CATEGORY_UPDATED_SUCCESSFULLY,StatusCodes.SUCCESS,category, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Response<Boolean>>deleteCategory(@PathVariable int id){
+        logger.info("Request recieved for deleting category for id::{}",id);
         boolean isCategoryDeleted = false;
         isCategoryDeleted = categoryService.deleteById(id);
         return generateResponse.formatResponse(StatusCodes.CATEGORY_DELETED_SUCCESSFULLY,StatusCodes.SUCCESS,isCategoryDeleted, HttpStatus.ACCEPTED);
