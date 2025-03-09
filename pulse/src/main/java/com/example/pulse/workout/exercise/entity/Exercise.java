@@ -22,6 +22,7 @@ import java.util.List;
 public class Exercise {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "category_id")
+    @JsonIgnore
     Category category;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "exercises")
     @JsonIgnore

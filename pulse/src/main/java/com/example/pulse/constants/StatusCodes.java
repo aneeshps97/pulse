@@ -38,4 +38,13 @@ public final class StatusCodes {
     public static final int PLAN_FETCHING_FAILED = 130;
     public static final int PLAN_DELETION_FAILED = 131;
     public static final int DAY_ALREADY_ASSIGNED_TO_ANOTHER_PLAN = 132;
+    public static final int CATEGORY_ADDED_SUCCESSFULLY = 133;
+    public static final int CATEGORY_UPDATED_SUCCESSFULLY = 134;
+    public static final int CATEGORY_FETCHED_SUCCESSFULLY = 135;
+    public static final int CATEGORY_DELETED_SUCCESSFULLY = 136;
+    public static final int CATEGORY_ADDING_FAILED = 137;
+    public static final int CATEGORY_UPDATING_FAILED = 138;
+    public static final int CATEGORY_FETCHING_FAILED = 139;
+    public static final int CATEGORY_DELETION_FAILED = 140;
+    public static final int EXERCISE_ALREADY_ASSIGNED_FOR_ANOTHER_CATEGORY = 141;
 }
