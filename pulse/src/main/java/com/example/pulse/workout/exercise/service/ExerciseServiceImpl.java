@@ -8,6 +8,8 @@ import com.example.pulse.workout.exercise.repository.ExerciseRepository;
 import com.example.pulse.workout.log.entity.Log;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +20,18 @@ import java.util.List;
 @AllArgsConstructor
 public class ExerciseServiceImpl implements ExerciseService {
     ExerciseRepository exerciseRepository;
+    public static final Logger logger = LoggerFactory.getLogger(ExerciseServiceImpl.class);
 
     @Override
     public Exercise add(Exercise exercise) throws PulseException {
-        Exercise savedExercise = null;
+        logger.info("Adding exercise data ::{}",exercise.toString());
         try {
-            savedExercise = exerciseRepository.save(exercise);
+            exercise = exerciseRepository.save(exercise);
         } catch (DataAccessException e) {
             e.getCause();
             throw new PulseException(StatusCodes.EXERCISE_ADDING_FAILED);
         }
-        return savedExercise;
+        return exercise;
     }
 
     @Override
@@ -36,6 +39,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     public Exercise update(int id, Exercise exercise) throws PulseException {
         Exercise updatedExercise = null;
         try {
+            logger.info("Updating exercise with id::{} data::{}",id,exercise.toString());
             updatedExercise = exerciseRepository.findById(id).orElseThrow(() -> new PulseException(StatusCodes.EXERCISE_FETCHING_FAILED));
             updatedExercise.setName(exercise.getName());
             updatedExercise.setComment(exercise.getComment());
@@ -51,6 +55,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     public Exercise findById(int id) throws PulseException {
         Exercise exercise = null;
         try {
+            logger.info("finding exercise with id::{}",id);
             exercise = exerciseRepository.findById(id).orElseThrow(() -> new PulseException(StatusCodes.EXERCISE_FETCHING_FAILED));
         } catch (DataAccessException e) {
             e.getCause();
@@ -63,6 +68,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     public List<Exercise> findAll() throws PulseException {
         List<Exercise> exercises = new ArrayList<>();
         try {
+            logger.info("finding all exercises");
             exercises = exerciseRepository.findAll();
         } catch (DataAccessException e) {
             throw new PulseException(StatusCodes.EXERCISE_FETCHING_FAILED);
@@ -74,6 +80,7 @@ public class ExerciseServiceImpl implements ExerciseService {
     public boolean delete(int id) throws PulseException {
         boolean isDeletionSuccess = false;
         try {
+            logger.info("Deleting exercise with id ::{}",id);
             Exercise exercise = exerciseRepository.findById(id).orElseThrow(() -> new PulseException(StatusCodes.EXERCISE_FETCHING_FAILED));
             for (Day day : exercise.getDays()) {
                 day.getExercises().remove(exercise);

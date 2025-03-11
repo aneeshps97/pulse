@@ -85,7 +85,7 @@ static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     @Override
     public Category update(int id, Category category) throws PulseException {
-        logger.info("Category data received ::{}",category);
+        logger.info("Category data received ::{}",category.toString());
         Category existingCategory = null;
         List<Exercise> existingExercises = new ArrayList<>();
         List<Exercise> exercises = null;

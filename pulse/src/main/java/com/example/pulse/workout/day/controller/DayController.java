@@ -25,14 +25,14 @@ public class DayController {
 
     @PostMapping
     public ResponseEntity<Response<Day>> addDay(@RequestBody Day day){
-        logger.info("Request received for adding day::{}",day);
+        logger.info("Request received for adding day::{}",day.toString());
         day = dayService.add(day);
         return generateResponse.formatResponse(StatusCodes.DAY_ADDED_SUCCESSFULLY,StatusCodes.SUCCESS, day,HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Response<Day>> updateDay(@PathVariable int id, @RequestBody Day day){
-        logger.info("Request received for updating day::id ::{} :: data::{}",id,day);
+        logger.info("Request received for updating day::id ::{} :: data::{}",id,day.toString());
         day= dayService.update(id,day);
         return generateResponse.formatResponse(StatusCodes.DAY_UPDATED_SUCCESSFULLY,StatusCodes.SUCCESS, day,HttpStatus.ACCEPTED);
 
